@@ -61,7 +61,7 @@ Note: Ensure greeting.wav is in the root directory for audio features.
 You can watch the full code walkthrough, project logic explanation, 
 and a live demonstration of the bot in action here:
 
-Link: [INSERT_YOUR_YOUTUBE_LINK_HERE]
+Link: [https://youtu.be/esOEIdVb6EA]
 --------
 🤝 Purpose
 I created this project to strengthen my skills in:
