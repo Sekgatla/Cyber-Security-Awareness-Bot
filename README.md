@@ -47,41 +47,29 @@ CyberBot/
 
 -----
 ⚙️ Installation & Running
-Prerequisites: Ensure you have the .NET SDK installed.
-
-Restore & Run:
-
-Bash
-dotnet restore
-dotnet run
-Note: Ensure greeting.wav remains in the root directory for audio features to work.
-
+1. Prerequisites: Ensure you have the .NET SDK installed.
+2. Restore dependencies: run 'dotnet restore' in your terminal.
+3. Run the bot: run 'dotnet run' to start the application.
+------
+Note: Ensure greeting.wav is in the root directory for audio features.
 ⚠️ Limitations & Future Scope
-This was built as a practice project to explore C# application structure and input handling.
-
-Current Limitations:
-
-Uses rigid keyword matching rather than Natural Language Processing (NLP).
-
-No session memory (stateless interaction).
-
-Audio playback is currently limited to Windows environments.
-
+- Uses rigid keyword matching rather than NLP.
+- No session memory (stateless interaction).
+- Audio playback is currently limited to Windows environments.
+----
 📺 Video Presentation
-You can watch the full code walkthrough, project logic explanation, and a live demonstration of the bot in action here:
+You can watch the full code walkthrough, project logic explanation, 
+and a live demonstration of the bot in action here:
 
-Click Here to Watch the Presentation
-
+Link: [INSERT_YOUR_YOUTUBE_LINK_HERE]
+--------
 🤝 Purpose
 I created this project to strengthen my skills in:
-
-Organizing code across multiple files.
-
-Managing user input loops.
-
-Integrating external DLLs for hardware interaction (audio).
-
+- Organizing code across multiple files.
+- Managing user input loops.
+- Integrating external DLLs for hardware interaction (audio).
+------
 📄 References
-Pieterse, H. 2021. The Cyber Threat Landscape in South Africa: A 10-Year Review. The African Journal of Information and Communication, 28(28).
-
-https://doi.org/10.23962/10539/32213
+Pieterse, H. 2021. The Cyber Threat Landscape in South Africa: A 10-Year Review. 
+The African Journal of Information and Communication, 28(28).  
+Source: [https://doi.org/10.23962/10539/32213](https://doi.org/10.23962/10539/32213)
