@@ -1,173 +1,172 @@
 using System;
-  using System.IO;
-  using System.Media;
-  using System.Windows;
-  using System.Windows.Controls;
-  using System.Windows.Input;
-  using System.Windows.Media;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
-  namespace CybersecurityChatbot
-  {
-      public partial class MainWindow : Window
-      {
-          private ChatBot _chatBot;
+namespace CybersecurityChatbot
+{
+    public partial class MainWindow : Window
+    {
+        private ChatBot _chatBot;
 
-          public MainWindow()
-          {
-              InitializeComponent();
-              _chatBot = new ChatBot();
+        public MainWindow()
+        {
+            InitializeComponent();
+            _chatBot = new ChatBot();
 
-              // Play audio after the window is fully rendered so the path resolves correctly
-              this.Loaded += MainWindow_Loaded;
+            // Play audio after the window is fully rendered so the path resolves correctly
+            this.Loaded += MainWindow_Loaded;
 
-              LoadAsciiArt();
-              AppendBotMessage(_chatBot.GetGreeting());
-          }
+            LoadAsciiArt();
+            AppendBotMessage(_chatBot.GetGreeting());
+        }
 
-          private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-          {
-              PlayVoiceGreeting();
-          }
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            PlayVoiceGreeting();
+        }
 
-          // ── ASCII art ─────────────────────────────────────────────────────
+        // ── ASCII art ─────────────────────────────────────────────────────
 
-          private void LoadAsciiArt()
-          {
-              AsciiArtDisplay.Text =
-                  "  ______      _               ____             \n" +
-                  " / ___|   _| |__   ___ _ __/ ___|  ___  ___ \n" +
-                  "| |  | | | | '_ \\ / _ \\ '__\\___ \\ / _ \\/ __|\n" +
-                  "| |__| |_| | |_) |  __/ |   ___) |  __/ (__ \n" +
-                  " \\____\\__, |_.__/ \\___|_|  |____/ \\___|\\___| v2.0\n" +
-                  "       |___/   Cybersecurity Awareness Bot    ";
-          }
+        private void LoadAsciiArt()
+        {
+            AsciiArtDisplay.Text =
+                "  ______      _               ____             \n" +
+                " / ___|   _| |__   ___ _ __/ ___|  ___  ___ \n" +
+                "| |  | | | | '_ \\ / _ \\ '__\\___ \\ / _ \\/ __|\n" +
+                "| |__| |_| | |_) |  __/ |   ___) |  __/ (__ \n" +
+                " \\____\\__, |_.__/ \\___|_|  |____/ \\___|\\___| v2.0\n" +
+                "       |___/   Cybersecurity Awareness Bot    ";
+        }
 
-          // ── Voice greeting ────────────────────────────────────────────────
+        // ── Voice greeting ────────────────────────────────────────────────
 
-          private void PlayVoiceGreeting()
-          {
-              try
-              {
-                  // AppDomain.CurrentDomain.BaseDirectory always points to the folder
-                  // containing the compiled EXE, where greeting.wav is copied on build.
-                  // A plain relative path fails because Visual Studio sets the working
-                  // directory to the project source folder, not the output folder.
-                  string wavPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
+        private void PlayVoiceGreeting()
+        {
+            try
+            {
+                // AppDomain.CurrentDomain.BaseDirectory always points to the folder
+                // containing the compiled EXE, where greeting.wav is copied on build.
+                // A plain relative path fails because Visual Studio sets the working
+                // directory to the project source folder, not the output folder.
+                string wavPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
 
-                  if (File.Exists(wavPath))
-                  {
-                      SoundPlayer player = new SoundPlayer(wavPath);
-                      player.Load();
-                      player.Play();
-                  }
-              }
-              catch (Exception)
-              {
-                  // WAV unavailable — continue silently, no crash
-              }
-          }
+                if (File.Exists(wavPath))
+                {
+                    // Use WPF-native MediaPlayer — no System.Windows.Forms dependency needed
+                    MediaPlayer player = new MediaPlayer();
+                    player.Open(new Uri(wavPath));
+                    player.Play();
+                }
+            }
+            catch (Exception)
+            {
+                // WAV unavailable — continue silently, no crash
+            }
+        }
 
-          // ── Button and keyboard events ────────────────────────────────────
+        // ── Button and keyboard events ────────────────────────────────────
 
-          private void SendButton_Click(object sender, RoutedEventArgs e)
-          {
-              SendMessage();
-          }
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            SendMessage();
+        }
 
-          private void UserInput_KeyDown(object sender, KeyEventArgs e)
-          {
-              if (e.Key == Key.Enter)
-                  SendMessage();
-          }
+        private void UserInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                SendMessage();
+        }
 
-          // ── Core send logic ───────────────────────────────────────────────
+        // ── Core send logic ───────────────────────────────────────────────
 
-          private void SendMessage()
-          {
-              string input = UserInput.Text.Trim();
-              if (string.IsNullOrWhiteSpace(input)) return;
+        private void SendMessage()
+        {
+            string input = UserInput.Text.Trim();
+            if (string.IsNullOrWhiteSpace(input)) return;
 
-              AppendUserMessage(input);
-              UserInput.Clear();
-              UserInput.Focus();
+            AppendUserMessage(input);
+            UserInput.Clear();
+            UserInput.Focus();
 
-              string response = _chatBot.ProcessInput(input);
-              AppendBotMessage(response);
-          }
+            string response = _chatBot.ProcessInput(input);
+            AppendBotMessage(response);
+        }
 
-          // ── Chat display helpers ──────────────────────────────────────────
+        // ── Chat display helpers ──────────────────────────────────────────
 
-          private void AppendUserMessage(string text)
-          {
-              Border bubble = new Border();
-              bubble.HorizontalAlignment = HorizontalAlignment.Right;
-              bubble.Background          = new SolidColorBrush(Color.FromRgb(21, 47, 72));
-              bubble.CornerRadius        = new CornerRadius(10, 10, 2, 10);
-              bubble.Padding             = new Thickness(12, 8, 12, 8);
-              bubble.Margin              = new Thickness(60, 4, 4, 4);
-              bubble.MaxWidth            = 580;
+        private void AppendUserMessage(string text)
+        {
+            Border bubble = new Border();
+            bubble.HorizontalAlignment = HorizontalAlignment.Right;
+            bubble.Background          = new SolidColorBrush(Color.FromRgb(21, 47, 72));
+            bubble.CornerRadius        = new CornerRadius(10, 10, 2, 10);
+            bubble.Padding             = new Thickness(12, 8, 12, 8);
+            bubble.Margin              = new Thickness(60, 4, 4, 4);
+            bubble.MaxWidth            = 580;
 
-              StackPanel stack = new StackPanel();
+            StackPanel stack = new StackPanel();
 
-              TextBlock label = new TextBlock();
-              label.Text       = "You";
-              label.Foreground = new SolidColorBrush(Color.FromRgb(0, 217, 255));
-              label.FontWeight = FontWeights.Bold;
-              label.FontSize   = 11;
-              label.FontFamily = new FontFamily("Segoe UI");
-              label.Margin     = new Thickness(0, 0, 0, 3);
+            TextBlock label = new TextBlock();
+            label.Text       = "You";
+            label.Foreground = new SolidColorBrush(Color.FromRgb(0, 217, 255));
+            label.FontWeight = FontWeights.Bold;
+            label.FontSize   = 11;
+            label.FontFamily = new FontFamily("Segoe UI");
+            label.Margin     = new Thickness(0, 0, 0, 3);
 
-              TextBlock message = new TextBlock();
-              message.Text         = text;
-              message.Foreground   = new SolidColorBrush(Color.FromRgb(230, 237, 243));
-              message.FontSize     = 13;
-              message.FontFamily   = new FontFamily("Segoe UI");
-              message.TextWrapping = TextWrapping.Wrap;
+            TextBlock message = new TextBlock();
+            message.Text         = text;
+            message.Foreground   = new SolidColorBrush(Color.FromRgb(230, 237, 243));
+            message.FontSize     = 13;
+            message.FontFamily   = new FontFamily("Segoe UI");
+            message.TextWrapping = TextWrapping.Wrap;
 
-              stack.Children.Add(label);
-              stack.Children.Add(message);
-              bubble.Child = stack;
+            stack.Children.Add(label);
+            stack.Children.Add(message);
+            bubble.Child = stack;
 
-              ChatPanel.Children.Add(bubble);
-              ChatScrollViewer.ScrollToBottom();
-          }
+            ChatPanel.Children.Add(bubble);
+            ChatScrollViewer.ScrollToBottom();
+        }
 
-          private void AppendBotMessage(string text)
-          {
-              Border bubble = new Border();
-              bubble.HorizontalAlignment = HorizontalAlignment.Left;
-              bubble.Background          = new SolidColorBrush(Color.FromRgb(22, 27, 34));
-              bubble.BorderBrush         = new SolidColorBrush(Color.FromRgb(48, 54, 61));
-              bubble.BorderThickness     = new Thickness(1);
-              bubble.CornerRadius        = new CornerRadius(10, 10, 10, 2);
-              bubble.Padding             = new Thickness(12, 8, 12, 8);
-              bubble.Margin              = new Thickness(4, 4, 60, 4);
-              bubble.MaxWidth            = 580;
+        private void AppendBotMessage(string text)
+        {
+            Border bubble = new Border();
+            bubble.HorizontalAlignment = HorizontalAlignment.Left;
+            bubble.Background          = new SolidColorBrush(Color.FromRgb(22, 27, 34));
+            bubble.BorderBrush         = new SolidColorBrush(Color.FromRgb(48, 54, 61));
+            bubble.BorderThickness     = new Thickness(1);
+            bubble.CornerRadius        = new CornerRadius(10, 10, 10, 2);
+            bubble.Padding             = new Thickness(12, 8, 12, 8);
+            bubble.Margin              = new Thickness(4, 4, 60, 4);
+            bubble.MaxWidth            = 580;
 
-              StackPanel stack = new StackPanel();
+            StackPanel stack = new StackPanel();
 
-              TextBlock label = new TextBlock();
-              label.Text       = "[CYBER-BOT]";
-              label.Foreground = new SolidColorBrush(Color.FromRgb(0, 255, 65));
-              label.FontWeight = FontWeights.Bold;
-              label.FontSize   = 11;
-              label.FontFamily = new FontFamily("Courier New");
-              label.Margin     = new Thickness(0, 0, 0, 4);
+            TextBlock label = new TextBlock();
+            label.Text       = "[CYBER-BOT]";
+            label.Foreground = new SolidColorBrush(Color.FromRgb(0, 255, 65));
+            label.FontWeight = FontWeights.Bold;
+            label.FontSize   = 11;
+            label.FontFamily = new FontFamily("Courier New");
+            label.Margin     = new Thickness(0, 0, 0, 4);
 
-              TextBlock message = new TextBlock();
-              message.Text         = text;
-              message.Foreground   = new SolidColorBrush(Color.FromRgb(201, 209, 217));
-              message.FontSize     = 13;
-              message.FontFamily   = new FontFamily("Segoe UI");
-              message.TextWrapping = TextWrapping.Wrap;
+            TextBlock message = new TextBlock();
+            message.Text         = text;
+            message.Foreground   = new SolidColorBrush(Color.FromRgb(201, 209, 217));
+            message.FontSize     = 13;
+            message.FontFamily   = new FontFamily("Segoe UI");
+            message.TextWrapping = TextWrapping.Wrap;
 
-              stack.Children.Add(label);
-              stack.Children.Add(message);
-              bubble.Child = stack;
+            stack.Children.Add(label);
+            stack.Children.Add(message);
+            bubble.Child = stack;
 
-              ChatPanel.Children.Add(bubble);
-              ChatScrollViewer.ScrollToBottom();
-          }
-      }
-  }
-  
+            ChatPanel.Children.Add(bubble);
+            ChatScrollViewer.ScrollToBottom();
+        }
+    }
+}
