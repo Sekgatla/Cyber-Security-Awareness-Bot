@@ -10,9 +10,9 @@
     <RootNamespace>CybersecurityChatbot</RootNamespace>
   </PropertyGroup>
 
-  <!-- Copy greeting WAV to output so voice greeting works at runtime -->
+  <!-- greeting.wav sits next to the .csproj — copy it to output on every build -->
   <ItemGroup>
-    <None Update="assets\greeting.wav">
+    <None Update="greeting.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

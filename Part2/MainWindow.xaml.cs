@@ -40,7 +40,7 @@ namespace CybersecurityChatbot
         {
             try
             {
-                SoundPlayer player = new SoundPlayer("assets\\greeting.wav");
+                SoundPlayer player = new SoundPlayer("greeting.wav");
                 player.Play();
             }
             catch (Exception)
