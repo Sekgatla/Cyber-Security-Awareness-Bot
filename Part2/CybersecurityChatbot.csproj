@@ -1,26 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-      <OutputType>WinExe</OutputType>
-      <TargetFramework>net8.0-windows</TargetFramework>
-      <Nullable>enable</Nullable>
-      <ImplicitUsings>disable</ImplicitUsings>
-      <UseWPF>true</UseWPF>
-      <AssemblyName>CybersecurityChatbot</AssemblyName>
-      <RootNamespace>CybersecurityChatbot</RootNamespace>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>CybersecurityChatbot</AssemblyName>
+    <RootNamespace>CybersecurityChatbot</RootNamespace>
+  </PropertyGroup>
 
-    <!-- Copy greeting WAV to output so PlayVoiceGreeting() can find it -->
-    <ItemGroup>
-      <None Update="assets\greeting.wav">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
+  <!-- Copy greeting WAV to output so voice greeting works at runtime -->
+  <ItemGroup>
+    <None Update="assets\greeting.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
-    <!-- Windows Forms audio support for SoundPlayer -->
-    <ItemGroup>
-      <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
-    </ItemGroup>
-
-  </Project>
-  
+</Project>

@@ -5,11 +5,20 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <AssemblyName>CyberBot</AssemblyName>
     <RootNamespace>CyberSecurityChatbot</RootNamespace>
   </PropertyGroup>
 
+  <!-- Exclude the Part 2 WPF subfolder — it has its own project file -->
+  <ItemGroup>
+    <Compile Remove="Part2\**" />
+    <None Remove="Part2\**" />
+    <EmbeddedResource Remove="Part2\**" />
+    <Page Remove="Part2\**" />
+  </ItemGroup>
+
+  <!-- Copy greeting WAV to output directory -->
   <ItemGroup>
     <None Update="greeting.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
