@@ -10,13 +10,13 @@ namespace CybersecurityChatbot
     public partial class MainWindow : Window
     {
         private ChatBot _chatBot;
+        private MediaPlayer _greetingPlayer = new MediaPlayer();
 
         public MainWindow()
         {
             InitializeComponent();
             _chatBot = new ChatBot();
 
-            // Play audio after the window is fully rendered so the path resolves correctly
             this.Loaded += MainWindow_Loaded;
 
             LoadAsciiArt();
@@ -47,18 +47,18 @@ namespace CybersecurityChatbot
         {
             try
             {
-                // AppDomain.CurrentDomain.BaseDirectory always points to the folder
-                // containing the compiled EXE, where greeting.wav is copied on build.
-                // A plain relative path fails because Visual Studio sets the working
-                // directory to the project source folder, not the output folder.
-                string wavPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
+                // BaseDirectory always resolves to the bin/Debug/net8.0-windows/ output
+                // folder where greeting.wav is copied on every build.
+                string wavPath = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
 
                 if (File.Exists(wavPath))
                 {
-                    // Use WPF-native MediaPlayer — no System.Windows.Forms dependency needed
-                    MediaPlayer player = new MediaPlayer();
-                    player.Open(new Uri(wavPath));
-                    player.Play();
+                    // MediaPlayer.Open() is asynchronous. We must not call Play()
+                    // immediately — wire it to MediaOpened so it fires only once
+                    // the file is fully buffered and ready.
+                    _greetingPlayer.MediaOpened += (s, e) => _greetingPlayer.Play();
+                    _greetingPlayer.Open(new Uri(wavPath, UriKind.Absolute));
                 }
             }
             catch (Exception)
