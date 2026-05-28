@@ -17,15 +17,30 @@ namespace CybersecurityChatbot
             InitializeComponent();
             _chatBot = new ChatBot();
 
-            this.Loaded += MainWindow_Loaded;
-
+            PlayVoiceGreeting();
             LoadAsciiArt();
             AppendBotMessage(_chatBot.GetGreeting());
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        // ── Voice greeting ────────────────────────────────────────────────
+
+        private void PlayVoiceGreeting()
         {
-            PlayVoiceGreeting();
+            try
+            {
+                string wavPath = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
+
+                if (File.Exists(wavPath))
+                {
+                    _greetingPlayer.MediaOpened += (s, e) => _greetingPlayer.Play();
+                    _greetingPlayer.Open(new Uri(wavPath, UriKind.Absolute));
+                }
+            }
+            catch (Exception)
+            {
+                // WAV unavailable — continue silently
+            }
         }
 
         // ── ASCII art ─────────────────────────────────────────────────────
@@ -39,32 +54,6 @@ namespace CybersecurityChatbot
                 "| |__| |_| | |_) |  __/ |   ___) |  __/ (__ \n" +
                 " \\____\\__, |_.__/ \\___|_|  |____/ \\___|\\___| v2.0\n" +
                 "       |___/   Cybersecurity Awareness Bot    ";
-        }
-
-        // ── Voice greeting ────────────────────────────────────────────────
-
-        private void PlayVoiceGreeting()
-        {
-            try
-            {
-                // BaseDirectory always resolves to the bin/Debug/net8.0-windows/ output
-                // folder where greeting.wav is copied on every build.
-                string wavPath = Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
-
-                if (File.Exists(wavPath))
-                {
-                    // MediaPlayer.Open() is asynchronous. We must not call Play()
-                    // immediately — wire it to MediaOpened so it fires only once
-                    // the file is fully buffered and ready.
-                    _greetingPlayer.MediaOpened += (s, e) => _greetingPlayer.Play();
-                    _greetingPlayer.Open(new Uri(wavPath, UriKind.Absolute));
-                }
-            }
-            catch (Exception)
-            {
-                // WAV unavailable — continue silently, no crash
-            }
         }
 
         // ── Button and keyboard events ────────────────────────────────────
