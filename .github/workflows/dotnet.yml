@@ -1,51 +1,38 @@
 name: Build - CyberBot Part 1 and Part 2
 
-  on:
-    push:
-      branches: [ master, main ]
-    pull_request:
-      branches: [ master, main ]
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
 
-  jobs:
-    build-part1:
-      name: Build Part 1 - Console App (.NET 8)
-      runs-on: windows-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+jobs:
+  build-part1:
+    name: Build Part 1 - Console App
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore CyberBot.csproj
+      - name: Build (Release)
+        run: dotnet build CyberBot.csproj --no-restore --configuration Release
 
-        - name: Setup .NET 8
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: 8.0.x
-
-        - name: Restore Part 1 dependencies
-          run: dotnet restore CyberBot.csproj
-
-        - name: Build Part 1 (Release)
-          run: dotnet build CyberBot.csproj --no-restore --configuration Release
-
-        - name: Part 1 build complete
-          run: echo "Part 1 console app built successfully!"
-
-    build-part2:
-      name: Build Part 2 - WPF GUI (.NET 8)
-      runs-on: windows-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-
-        - name: Setup .NET 8
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: 8.0.x
-
-        - name: Restore Part 2 dependencies
-          run: dotnet restore Part2/CybersecurityChatbot.csproj
-
-        - name: Build Part 2 (Release)
-          run: dotnet build Part2/CybersecurityChatbot.csproj --no-restore --configuration Release
-
-        - name: Part 2 build complete
-          run: echo "Part 2 WPF GUI built successfully!"
-  
+  build-part2:
+    name: Build Part 2 - WPF GUI
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore Part2/CybersecurityChatbot.csproj
+      - name: Build (Release)
+        run: dotnet build Part2/CybersecurityChatbot.csproj --no-restore --configuration Release
