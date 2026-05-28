@@ -10,7 +10,6 @@ name: Build - CyberBot Part 1 and Part 2
     build-part1:
       name: Build Part 1 - Console App (.NET 8)
       runs-on: windows-latest
-
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4
@@ -32,7 +31,6 @@ name: Build - CyberBot Part 1 and Part 2
     build-part2:
       name: Build Part 2 - WPF GUI (.NET 8)
       runs-on: windows-latest
-
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4
