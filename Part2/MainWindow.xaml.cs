@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,7 +11,6 @@ namespace CybersecurityChatbot
     public partial class MainWindow : Window
     {
         private ChatBot _chatBot;
-        private MediaPlayer _greetingPlayer = new MediaPlayer();
 
         public MainWindow()
         {
@@ -33,8 +33,8 @@ namespace CybersecurityChatbot
 
                 if (File.Exists(wavPath))
                 {
-                    _greetingPlayer.MediaOpened += (s, e) => _greetingPlayer.Play();
-                    _greetingPlayer.Open(new Uri(wavPath, UriKind.Absolute));
+                    SoundPlayer player = new SoundPlayer(wavPath);
+                    player.Play();
                 }
             }
             catch (Exception)
