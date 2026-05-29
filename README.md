@@ -255,8 +255,11 @@
   ---
 
   ## Video Presentation
+  
+part 1 - https://youtu.be/esOEIdVb6EA?si=0P01PccYEdY_jaEJ 
+part 2 - https://youtu.be/vW_tzyP-inA?si=MMGAnaHtLS-43mrW
 
-  Coming soon.
+  
 
   ---
 
