@@ -1,4 +1,4 @@
-name: Build - CyberBot Part 1 and Part 2
+name: Build - CyberBot All Parts
 
 on:
   push:
@@ -36,3 +36,18 @@ jobs:
         run: dotnet restore Part2/CybersecurityChatbot.csproj
       - name: Build (Release)
         run: dotnet build Part2/CybersecurityChatbot.csproj --no-restore --configuration Release
+
+  build-part3:
+    name: Build Part 3 - WPF GUI (Task Assistant, Quiz, NLP, Activity Log)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies (includes MySql.Data NuGet package)
+        run: dotnet restore Part3/CybersecurityChatbotPart3.csproj
+      - name: Build (Release)
+        run: dotnet build Part3/CybersecurityChatbotPart3.csproj --no-restore --configuration Release
