@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>CybersecurityChatbotPart3</AssemblyName>
+    <RootNamespace>CybersecurityChatbot</RootNamespace>
+  </PropertyGroup>
+
+  <!-- MySQL database driver for task storage (Task 1 — Task Assistant) -->
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.4.0" />
+  </ItemGroup>
+
+  <!-- greeting.wav sits next to the .csproj — copy it to output on every build -->
+  <ItemGroup>
+    <None Update="greeting.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
